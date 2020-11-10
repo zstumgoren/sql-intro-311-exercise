@@ -53,7 +53,7 @@ To that end, write SQL queries that can answer the below questions.
 
 Note that the last query took a minute or more to run (depending on your machine).  There are several ways to speed up this query. 
 
-One option would involve writing a subquery to perform the `SELECT DISINCT` opertion, and then wrapping that query in another query to perform the sorting (which is the "expensive" part of our original query). 
+One option would involve writing a subquery to perform the `SELECT DISINCT` operation, and then wrapping that query inside another to perform the sorting. This strategy defers the most "expensive" part of our original query -- the sorting operation -- to an outer layer, where it is applied to the already filtered, unique set of data and therefore runs much more quickly.
 
 ```
 SELECT Category
@@ -63,14 +63,11 @@ FROM (
 ORDER BY Category;
 ```
 
-But the approach can quickly grow difficult to manage *and* read, as queries grow in size.
+But this approach can quickly grow difficult to manage *and* read, as queries grow in size and complexity.
 
-An alternative solution involves creating a [database index](https://en.wikipedia.org/wiki/Database_index). You can think of an index conceptually as similar to the index you might find in a book. It enables a database, in response to a query, to quickly locate and sort column values without first having to scan every row in the database. 
+An alternative solution involves creating a [database index](https://en.wikipedia.org/wiki/Database_index). You can think of an index conceptually as similar to the index of a book. It enables a database, in response to a query, to quickly locate and sort column values without first having to scan every row in a table. 
 
-In order to speed up our queries, let's start by adding an index for the `Category`
- field. 
- 
- 
+In order to speed up our queries, let's start by adding an index for the `Category` field. 
 
 An index can be added to the `cases` table by:
 
@@ -81,14 +78,14 @@ An index can be added to the `cases` table by:
 Once on the index creation pop-up:
 
 * Give the index a name, such as `category_index`
-* Use the wizard to select the `Category` field and click the right arrow (`>`) to move choose it as the column to be indexed
+* Use the wizard to select the `Category` field and click the right arrow (`>`) to choose it as the column to be indexed (it should now appear in the righ panel of the wizard)
 * Click `OK` and wait for the index to be created (this will take a few seconds)
 
-Now try re-running the original DISTINCT query (which included the `ORDER BY Category` clause)and see if it improves the execution time. It should have dramatically improved the speed:  from over a minute to less than 1 second!
+Now try re-running the original DISTINCT query (which included the `ORDER BY Category` clause) to see the effect. It should have dramatically improved the execution time of the query:  from over 1 minute to less than 1 second!
 
 Repeat the above process to add indexes for `RequestType` and `Neighborhood` since we'll be analyzing these fields as well.
 
-> NOTE: Creating indexes involves a trade-off between the speed of queries and size of the database. After adding indexes for the three fields mentioned above, the size of the SQLite database should have grown by roughly 300MB.
+> NOTE: Creating indexes involves a trade-off between the speed of queries and size of the database (indexes increase the size of a DB). In practice, with storage space being cheap and expansive these days, this is typically an acceptable trade-off.
 
 ## Returning to our queries
 
