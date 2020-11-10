@@ -204,8 +204,15 @@ What if any trends can you notice for each of the neighborhoods by examining the
 
 ## From DB Browser to Flourish
 
-Try exporting the CSV and create a Flourish line chart that plots yearly values for all three neighborhoods.
+DB Browser includes some basic charting facilities, but not nearly as rich and polished as visualization platform such as Flourish.
 
-This will require using a Pivot Table to aggregate and *reshape* the data into a form suitable for Flourish. 
+Start by leveling up the line chart template in Flourish.
 
-You'll need to experiment in the PivotChart Fields panel to figure out where to put the `Neighborhood` and `opened_year` fields to get a correctly structured line chart.
+Then, export a CSV of data from the last analysis query (Top 3 neighborhoods for reports of human and animal waste).
+ 
+Before creating a Flourish line chart that plots yearly values for all three neighborhoods,
+you'll need to *reshape* the data into a form that works with the Flourish template.
+
+While SQL can be used to reshape the data, this type of data wrangling can be a bit of a slog in SQL. Instead, let's export the data and use an Excel Pivot Table to reshape the data into a form suitable for Flourish.
+
+> NOTE: You'll need to experiment in the PivotChart Fields panel to figure out where to put the `Neighborhood` and `opened_year` fields to get a correctly structured line chart.
