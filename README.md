@@ -1,5 +1,7 @@
 # SF 311
 
+> This hands-on exercise is intended for use with [DB Browser for SQLite](https://sqlitebrowser.org/). If you're unfamiliar with that tool, please review the [docs](https://github.com/sqlitebrowser/sqlitebrowser/wiki) and/or the [Gentle Intro to SQL using SQLite](https://a-gentle-introduction-to-sql.readthedocs.io/en/latest/index.html).
+
 [311](https://en.wikipedia.org/wiki/3-1-1) is a special number you can call for non-emergency government services. Many cities offer some version of this, and increasingly you can file requests for service online and through mobile apps.
 
 San Francisco provides its [311 data](https://data.sfgov.org/City-Infrastructure/311-Cases/vw6y-z8j6) through an online portal.
@@ -45,13 +47,30 @@ To that end, write SQL queries that can answer the below questions.
 > Note, it's a good idea to save the queries as you go, for example in a file called `311.sql`.
 
 * How many cases are in the data? Does the number match the figure presented on the data portal?
-* Create a *distinct* list of `Category` values and order them alphabetically. What data issues, if any, do we see?
+* Create a *distinct* list of `Category` values and *order them alphabetically*. What data issues, if any, do we see?
 
 ## Speeding up queries
 
-Note that the last query took a minute or more to run (depending on your machine). 
+Note that the last query took a minute or more to run (depending on your machine).  There are several ways to speed up this query. 
 
-Let's add a [database index](https://en.wikipedia.org/wiki/Database_index) on the `Category` field and re-run the query to see if it improves the execution time. While we're at it, let's add indexes for `RequestType` and `Neighborhood` since we'll be analyzing these fields as well.
+One option would involve writing a subquery to perform the `SELECT DISINCT` opertion, and then wrapping that query in another query to perform the sorting (which is the "expensive" part of our original query). 
+
+```
+SELECT Category
+FROM (
+ SELECT DISTINCT Category FROM cases
+)
+ORDER BY Category;
+```
+
+But the approach can quickly grow difficult to manage *and* read, as queries grow in size.
+
+An alternative solution involves creating a [database index](https://en.wikipedia.org/wiki/Database_index). You can think of an index conceptually as similar to the index you might find in a book. It enables a database, in response to a query, to quickly locate and sort column values without first having to scan every row in the database. 
+
+In order to speed up our queries, let's start by adding an index for the `Category`
+ field. 
+ 
+ 
 
 An index can be added to the `cases` table by:
 
@@ -65,19 +84,18 @@ Once on the index creation pop-up:
 * Use the wizard to select the `Category` field and click the right arrow (`>`) to move choose it as the column to be indexed
 * Click `OK` and wait for the index to be created (this will take a few seconds)
 
-Repeat the above process for all three fields.
+Now try re-running the original DISTINCT query (which included the `ORDER BY Category` clause)and see if it improves the execution time. It should have dramatically improved the speed:  from over a minute to less than 1 second!
+
+Repeat the above process to add indexes for `RequestType` and `Neighborhood` since we'll be analyzing these fields as well.
 
 > NOTE: Creating indexes involves a trade-off between the speed of queries and size of the database. After adding indexes for the three fields mentioned above, the size of the SQLite database should have grown by roughly 300MB.
 
 ## Returning to our queries
 
-Next, try running the `DISTINCT` query for the `Category` field to verify the effect of the index. It should now run *much* faster (i.e. less than 1 second!).
-
-Perform the follow queries as well:
+With our indexes in place, we can return to some data quality assessment and basic analysis.
 
 * Create a *distinct* list of `RequestType` values and order alphabetically. What data issues, if any, do we see?
 * Create a *distinct* list of `Neighborhood` values and order alphabetically. What data issues, if any, do we see?
-
 
 ## Analysis tasks
 
