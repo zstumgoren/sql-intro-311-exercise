@@ -1,4 +1,16 @@
+- [Overview](#overview)
+- [Generating Questions](#generating-questions)
+- [Fact-finding](#fact-finding)
+- [Load the data](#load-the-data)
+- [Get to know the data](#get-to-know-the-data)
+- [Speeding up queries](#speeding-up-queries)
+- [Returning to our queries](#returning-to-our-queries)
+- [Analysis tasks](#analysis-tasks)
+- [From DB Browser to Flourish](#from-db-browser-to-flourish)
+
 # SF 311
+
+## Overview
 
 > This hands-on exercise is intended for use with [DB Browser for SQLite](https://sqlitebrowser.org/). If you're unfamiliar with that tool, please review the [docs](https://github.com/sqlitebrowser/sqlitebrowser/wiki) and/or the [Gentle Intro to SQL using SQLite](https://a-gentle-introduction-to-sql.readthedocs.io/en/latest/index.html).
 
